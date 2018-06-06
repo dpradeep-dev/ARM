@@ -1,0 +1,94 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "BatStorageForFiles-Name": {
+      "type": "string",
+      "defaultValue": "batstoretest01"
+    },
+    "BatStorageForAudit-Name": {
+      "type": "string",
+      "defaultValue": "batstoretest02"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "North Europe"
+    },
+    "BatStorageForFiles-AccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },    
+    "BatStorageForAudit-AccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    }
+  },
+  "variables": {
+
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-10-01",
+      "name": "[parameters('BatStorageForFiles-Name')]",
+      "location": "[parameters('location')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('BatStorageForFiles-AccountType')]",
+        "tier": "Standard"
+      },
+      "kind": "BlobStorage",
+      "properties": {
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    },
+    {
+      "apiVersion": "2017-10-01",
+      "name": "[parameters('BatStorageForAudit-Name')]",
+      "location": "[parameters('location')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('BatStorageForAudit-AccountType')]",
+        "tier": "Standard"
+      },
+      "kind": "Storage",
+      "properties": {
+        "supportsHttpsTrafficOnly": false,
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
+            },
+            "file": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    }
+  ]
+}
